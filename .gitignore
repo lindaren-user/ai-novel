@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+fe/node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+fe/dist/
+be/cmd/server/__debug_bin*
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.tsbuildinfo
+
+# Local config and secrets
+.env
+.env.local
+.env.*.local
+deploy/.env
+be/config.yaml
+config.yaml
+data/
+
+# Deployment runtime data
+deploy/data/
+deploy/runtime/
+
+# Logs
+logs/
+be/logs/
+*.log
+
+# Go workspace
+go.work
+go.work.sum
+
+# Docker local overrides
+docker-compose.override.yml
+docker-compose.yaml
+docker-compose.yml
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local agent/tooling files
+.claude/
+AGENTS.md
+.agents/
+

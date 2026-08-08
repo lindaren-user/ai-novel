@@ -1,0 +1,11 @@
+.git
+.agents
+.codex
+node_modules
+fe/node_modules
+fe/dist
+be/logs
+deploy/data
+deploy/runtime
+*.log
+*.exe

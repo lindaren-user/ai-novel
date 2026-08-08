@@ -1,0 +1,91 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: ai-novel-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - ai_novel_postgres_data:/var/lib/postgresql
+      - ../be/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:8-alpine
+    container_name: ai-novel-redis
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--aclfile",
+        "/usr/local/etc/redis/users.acl.conf",
+      ]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ai_novel_redis_data:/data
+      - ./runtime/redis/users.acl.conf:/usr/local/etc/redis/users.acl.conf:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-u",
+          "redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@localhost:6379",
+          "ping",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  be:
+    build:
+      context: ..
+      dockerfile: be/Dockerfile
+    container_name: ai-novel-be
+    environment:
+      CONFIG_FILE: /app/config/config.prod.yaml
+      AI_SKILLS_DIR: /app/ai_skills
+      TZ: Asia/Shanghai
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:6060:6060"
+    volumes:
+      - ./runtime/config.prod.yaml:/app/config/config.prod.yaml:ro
+      - ./data/logs:/app/logs
+      - ../be/internal/service/ai_skills:/app/ai_skills:ro
+    stop_grace_period: 120s
+    restart: unless-stopped
+
+  fe:
+    build:
+      context: ..
+      dockerfile: fe/Dockerfile
+    container_name: ai-novel-fe
+    depends_on:
+      - be
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
+volumes:
+  ai_novel_postgres_data:
+    external: true
+  ai_novel_redis_data:
+    external: true
