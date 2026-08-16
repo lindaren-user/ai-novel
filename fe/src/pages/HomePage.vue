@@ -5,6 +5,7 @@ import {
   BookOpen,
   CheckCircle2,
   CircleCheck,
+  Clock,
   FileText,
   Globe,
   Layers,
@@ -26,10 +27,10 @@ const router = useRouter();
 const store = useAppStore();
 
 const stats = [
-  { icon: Sparkles, value: "4.2 亿+", label: "累计生成字数" },
-  { icon: BookOpen, value: "180,000+", label: "创建小说" },
-  { icon: Users, value: "360,000+", label: "角色设定" },
-  { icon: CircleCheck, value: "98%", label: "用户满意度" },
+  { icon: Sparkles, value: "2 分钟", label: "生成世界观" },
+  { icon: Layers, value: "7 步", label: "完成一部小说" },
+  { icon: Clock, value: "24h", label: "随时创作" },
+  { icon: CircleCheck, value: "100%", label: "原创内容" },
 ];
 
 const workflow = [
@@ -83,7 +84,11 @@ async function confirmLogout() {
         class="mx-auto flex h-16 max-w-none items-center justify-between px-5 lg:px-10"
       >
         <button class="flex items-center gap-4" @click="router.push('/')">
-          <img :src="aiNovelLogo" alt="AI Novel" class="h-14 w-auto object-contain" />
+          <img
+            :src="aiNovelLogo"
+            alt="AI Novel"
+            class="h-14 w-auto object-contain"
+          />
         </button>
 
         <div
@@ -156,9 +161,7 @@ async function confirmLogout() {
         <div
           class="mx-auto flex h-full w-full max-w-[1320px] flex-col justify-between pb-0 pt-10"
         >
-          <div
-            class="flex min-h-0 flex-1 items-center pb-4"
-          >
+          <div class="flex min-h-0 flex-1 items-center pb-4">
             <div class="max-w-[480px]">
               <img
                 :src="descriptionImage"
@@ -230,9 +233,7 @@ async function confirmLogout() {
             class="relative top-5 mt-12 grid items-center gap-8 lg:grid-cols-[180px_1fr]"
           >
             <div class="hidden lg:block">
-              <h2 class="text-lg font-bold">
-                创作流程
-              </h2>
+              <h2 class="text-lg font-bold">创作流程</h2>
               <p class="mt-4 text-sm leading-6 text-gray-500">
                 AI 全程陪伴，创作流畅自然
               </p>
